@@ -2,7 +2,14 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('students/', views.StudentView),
-    path('scores/', views.ScoreView)
+
+    #Class 기반
+    # path('students', views.StudentView.as_view())
+
+    # 함수 기반
+    # path('students/', views.StudentView),
+    # path('students/<id>', views.StudentDetailView),
+    # path('scores/', views.ScoreView),
+    # path('scores/<id>', views.ScoreDetailView),
 ]
 

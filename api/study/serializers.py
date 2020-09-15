@@ -9,4 +9,4 @@ class StudentSerializer(ModelSerializer):
 class ScoreSerializer(ModelSerializer):
     class Meta:
         model = Scores
-        fields = ['name'] 
+        fields = '__all__'
