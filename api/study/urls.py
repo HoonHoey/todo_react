@@ -7,7 +7,9 @@ router.register('students', views.StudentView)
 router.register('scores', views.ScoreView)
 
 urlpatterns = [
-    path('', include(router.urls)) 
+    path('', include(router.urls)), 
+    path('test', views.StudentBasicView),
+    path('test/<pk>', views.StudentDetailBasicView)
 
     #Class 기반
     # path('students', views.StudentView.as_view())
