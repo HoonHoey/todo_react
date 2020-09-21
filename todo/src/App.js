@@ -4,6 +4,8 @@ import 'antd/dist/antd.css';
 import Welcome from 'Welcome';
 import Message from 'Message';
 import TestState from 'TestState';
+import Box from 'Box';
+import TodoList from 'TodoList';
 
 function Add({x, y})
 {
@@ -19,12 +21,21 @@ function Add({x, y})
 
 function Gugudan({x}) {
   const [z, setZ] = React.useState([2, 3, 4, 5, 6, 7, 8, 9])
+  const [h, setH] = React.useState(x)
+
+  const change = (e) => {
+    console.log(e)
+    setH(e.target.value)
+    // console.log(e.target.getAttribute("value"))
+  }
 
   console.log(x)
   return (
     <>
+    {h}
+    <input value={h} onChange={change}/>
     {z.map((v, i) => {
-      return <div>{x} X {v} = {x * v}</div>
+      return <div>{h} X {v} = {h * v}</div>
     })}
     </>
   )
@@ -40,6 +51,8 @@ function App() {
       <Add x={1} y={2}/>
       {/* <Message/>
       <Welcome/> */}
+      <Box/>
+      <TodoList/>
       
     </div>
   );
