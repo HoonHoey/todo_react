@@ -20,11 +20,6 @@ class StudentSerializer(ModelSerializer):
         fields = ['name', 'address', 'email', 'memo', 'reg_user', 
                   'reg_user_username', 'reg_user_email'] 
 
-class UserSerializer(ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ['username', 'email', 'phone_number']
-
 
 class ScoreSerializer(ModelSerializer):
 

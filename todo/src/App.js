@@ -6,6 +6,9 @@ import Message from 'Message';
 import TestState from 'TestState';
 import Box from 'Box';
 import TodoList from 'TodoList';
+// import TestReduser from 'testreduser';
+import TimeList from 'TimeList';
+import RouterTest from 'RouterTest';
 
 function Add({x, y})
 {
@@ -47,13 +50,14 @@ function App() {
     <div>
       
       {/* <TestState/> */}
-      <Gugudan x={2}/>
-      <Add x={1} y={2}/>
+      {/* <Gugudan x={2}/>
+      <Add x={1} y={2}/> */}
       {/* <Message/>
       <Welcome/> */}
-      <Box/>
-      <TodoList/>
-      
+      {/* <Box/>
+      <TodoList/> */}
+      {/* <TimeList/> */}
+      <RouterTest/>
     </div>
   );
 }
