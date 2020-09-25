@@ -4,7 +4,9 @@ import Axios from 'axios';
 
 function State({state, setState}){
     
-    
+    const[favorite, setFavorite] = React.useState({
+        name:'',
+        }); 
     
     const  handleOk = e => {
       console.log(e);
@@ -20,6 +22,19 @@ function State({state, setState}){
       });
     };
 
+    const change = e => {
+
+        // const value = e.target.value;
+        // const name = e.target.name;
+
+        const {value, name} = e.target;
+
+        setFavorite({
+            ...favorite,
+            [name]:e.target.value
+        })
+    }
+
   return (
       <>
       <Modal
@@ -28,9 +43,9 @@ function State({state, setState}){
           onOk={handleOk}
           onCancel={handleCancel}
       >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          {favorite.name}
+          <div>이름
+          <input type="text" value={favorite.name} name="name" onChange={change}/></div>
       </Modal>
       </>
       );

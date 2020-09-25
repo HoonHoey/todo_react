@@ -112,18 +112,39 @@ export default function Todo({history, location, match})
   return(
       <>
       <div><button id="button" type="primary" ghost onClick={showModal}>+ 추가</button></div>
-      <ul className="detail">
-      {
-      todo.map((v, i) => {
-      return ( 
-
-              <ul id="List">
-                  <li><h3>{v.name}</h3> {v.status}  {v.end_date} {v.group}</li> 
-              </ul>
-      )
-      })
-      }
-      </ul>
+      <div id="ListBox">
+      <div className="detail">
+      <div><h3>할 일</h3></div>
+      {todo.map((v, i) => {
+        return (  
+                <div className="List">
+                    <div>{v.name}</div> 
+                    <div>{v.end_date}</div>
+                </div>
+      )})}
+      </div>
+      <div className="detail">
+      <div><h3>진행중</h3></div>
+      {todo.map((v, i) => {
+        return (  
+                <div className="List">
+                    
+                    <div>{v.name}</div>   
+                    <div>{v.end_date}</div> 
+                </div>
+      )})}
+      </div>
+      <div className="detail">
+      <div><h3>완료</h3></div>
+      {todo.map((v, i) => {
+        return (  
+                <div className="List">        
+                    <div>{v.name}</div>   
+                    <div>{v.end_date}</div>
+                </div>
+      )})}
+      </div>
+      </div>
       <State state={state} setState={setState}/>
       </>
   )

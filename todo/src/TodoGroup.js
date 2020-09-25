@@ -4,6 +4,9 @@ import Axios from 'axios';
 
 function State({state, setState}){
     
+    const[todogroup, setTodoGroup] = React.useState({
+        name:'',
+        }); 
     
     const  handleOk = e => {
       console.log(e);
@@ -19,6 +22,19 @@ function State({state, setState}){
       });
     };
 
+    const change = e => {
+
+        // const value = e.target.value;
+        // const name = e.target.name;
+
+        const {value, name} = e.target;
+
+        setTodoGroup({
+            ...todogroup,
+            [name]:e.target.value
+        })
+    }
+
   return (
       <>
       <Modal
@@ -27,9 +43,9 @@ function State({state, setState}){
           onOk={handleOk}
           onCancel={handleCancel}
       >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          {todogroup.name}
+          <div>이름
+          <input type="text" value={todogroup.name} name="name" onChange={change}/></div>
       </Modal>
       </>
       );
