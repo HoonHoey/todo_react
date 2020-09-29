@@ -8,7 +8,6 @@ from .serializers import TodoSerializer, TodoGroupSerializer, FavoriteSerializer
 from rest_framework.response import Response
 
 # Create your views here.
-
 class TodoView(viewsets.ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -18,7 +17,7 @@ class TodoView(viewsets.ModelViewSet):
         status = self.request.query_params.get('status')
 
         if status:
-            qs = qs.filter(status=pending)
+            qs = qs.filter(status=status) #where
         return qs
 
 class TodoGroupView(viewsets.ModelViewSet):
