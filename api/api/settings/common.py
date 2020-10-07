@@ -26,7 +26,10 @@ SECRET_KEY = '$vbn-^*$a*=9m&cr)+(g!+730aqm1h&7-z8qu_)!w7$+9(%1*o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['15.164.100.163', 
+'ec2-15-164-100-163.ap-northeast-2.compute.amazonaws.com',
+'127.0.0.1',
+'localhost']
 
 
 # Application definition
