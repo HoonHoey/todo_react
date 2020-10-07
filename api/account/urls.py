@@ -3,6 +3,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('api-jwt-auth', obtain_jwt_token),
-    path('api-jwt-auth', refresh_jwt_token),
-    path('api-jwt-auth', verify_jwt_token),
+    path('refresh-jwt-auth', refresh_jwt_token),
+    path('verify-jwt-auth', verify_jwt_token),
 ]

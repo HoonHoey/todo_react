@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
 import Axios from 'axios';
+import { DeleteFilled, FileAddFilled, EditFilled } from '@ant-design/icons';
 
 
 function State({ state, setState, setTodoList }) {
@@ -9,7 +10,7 @@ function State({ state, setState, setTodoList }) {
     name: '',
     reg_date: '',
     end_date: '',
-    status:'pending'
+    status: 'pending'
   });
 
   const input = e => {
@@ -18,28 +19,28 @@ function State({ state, setState, setTodoList }) {
 
   const [group, setGroup] = React.useState([])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
 
     Axios.get("http://127.0.0.1:8000/api/todo/todogroup/")
-    .then(res => {
+      .then(res => {
 
-      const { data } = res;
+        const { data } = res;
 
-      setGroup(prev => data)
+        setGroup(prev => data)
 
-    }).catch(error => {
-      console.log(error);
-    })
+      }).catch(error => {
+        console.log(error);
+      })
 
-  
-  },[]);
+
+  }, []);
 
   const handleOk = e => {
-      
+
     Axios.post("http://127.0.0.1:8000/api/todo/todo/", todo)
       .then(res => {
 
-          Axios.get("http://127.0.0.1:8000/api/todo/todo?status=" + todo.status)
+        Axios.get("http://127.0.0.1:8000/api/todo/todo?status=" + todo.status)
           .then(res => {
             const { data } = res;
 
@@ -50,40 +51,10 @@ function State({ state, setState, setTodoList }) {
           }).catch(error => {
             console.log(error);
           })
-    
+
       }).catch(error => {
         console.log(error);
-    });
-
-
-  
-
-    // Axios.get("http://127.0.0.1:8000/api/todo/todo?status=inprograss/", todo)
-    // .then(res => {
-    //   const { data } = res;
-
-    //   setTodo(prev => ({
-    //     ...prev,
-    //     inprogress: data
-    //   }))
-    // }).catch(error => {
-    //   console.log(error);
-    // })
-
-    // Axios.get("http://127.0.0.1:8000/api/todo/todo?status=end/", todo)
-    // .then(res => {
-    //   const { data } = res;
-
-    //   setTodo(prev => ({
-    //     ...prev,
-    //     end: data
-    //   }))
-    // }).catch(error => {
-    //   console.log(error);
-    // })
-
-      
-
+      });
 
     setState({
       visible: false,
@@ -98,10 +69,6 @@ function State({ state, setState, setTodoList }) {
   };
 
   const change = e => {
-
-    // const value = e.target.value;
-    // const name = e.target.name;
-
     const { value, name } = e.target;
 
     setTodo({
@@ -133,18 +100,127 @@ function State({ state, setState, setTodoList }) {
         <div>구분
           <select type="text" value={todo.group} name="group" onChange={change}>
             {
-              group.map((v)=>{
+              group.map((v) => {
                 return <option value={v.seq}>{v.name}</option>
               })
             }
-            </select>
-          </div>
+          </select>
+        </div>
       </Modal>
-
-
     </>
   );
 }
+
+
+function EditState({ state, setState, setTodoList, setEditState, editstate }) {
+
+  const [todo, setTodo] = React.useState({
+    name: '',
+    reg_date: '',
+    end_date: '',
+    status: 'pending'
+  });
+
+  const input = e => {
+    setTodo([])
+  }
+
+  const [group, setGroup] = React.useState([])
+
+  React.useEffect(() => {
+
+    Axios.get("http://127.0.0.1:8000/api/todo/todogroup/")
+      .then(res => {
+
+        const { data } = res;
+
+        setGroup(prev => data)
+
+      }).catch(error => {
+        console.log(error);
+      })
+
+
+  }, []);
+
+  const handleOk2 = e => {
+
+
+    Axios.put("http://127.0.0.1:8000/api/todo/todo/" + editstate.seq + "/", todo)
+      .then(res => {
+
+        Axios.get("http://127.0.0.1:8000/api/todo/todo?status=" + todo.status)
+          .then(res => {
+            const { data } = res;
+
+            setTodoList(prev => ({
+              ...prev,
+              [todo.status]: data
+            }))
+          }).catch(error => {
+            console.log(error);
+          })
+
+      }).catch(error => {
+        console.log(error);
+      });
+
+    setEditState({
+      visible: false,
+    });
+  };
+
+  const handleCancel = e => {
+    console.log(e);
+    setEditState({
+      visible: false,
+    });
+  };
+
+  const change = e => {
+    const { value, name } = e.target;
+
+    setTodo({
+      ...todo,
+      [name]: e.target.value
+    })
+  }
+
+  return (
+    <>
+
+      <Modal
+        title="Edit"
+        visible={editstate.visible}
+        onOk={handleOk2}
+        onCancel={handleCancel}
+      >
+        {todo.name}, {todo.reg_date}, {todo.end_date}   {editstate.seq}
+        <div>이름
+          <input type="text" value={todo.name} name="name" onChange={change} /></div>
+        <div>스테이터스
+          <select type="text" value={todo.status} name="status" onChange={change}>
+            <option value="pending">해야 할 일</option>
+            <option value="inprograss">진행중</option>
+            <option value="end">완료</option>
+          </select></div>
+        <div>종료일
+          <input type="date" value={todo.end_date} name="end_date" onChange={change} /></div>
+        <div>구분
+          <select type="text" value={todo.group} name="group" onChange={change}>
+            {
+              group.map((v) => {
+                return <option value={v.seq}>{v.name}</option>
+              })
+            }
+          </select>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+
 
 export default function Todo({ history, location, match }) {
 
@@ -164,11 +240,25 @@ export default function Todo({ history, location, match }) {
     visible: false
   });
 
+  const [editstate, setEditState] = React.useState({
+    visible: false
+  });
+
   const showModal = () => {
     setState({
       visible: true,
     });
   };
+
+  const showModalEdit = (seq) => {
+
+
+    setEditState({
+      visible: true,
+      seq: seq
+    });
+  };
+
 
   const showModalDelete = (seq, status) => {
 
@@ -184,7 +274,11 @@ export default function Todo({ history, location, match }) {
   };
 
   React.useEffect(() => {
-    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=pending")
+    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=pending",{
+      headers: {
+        Authorization: "JWT " + window.localStorage.getItem("token")
+      }
+    })
       .then(res => {
 
         const { data } = res;
@@ -198,7 +292,11 @@ export default function Todo({ history, location, match }) {
         console.log(error);
       })
 
-    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=inprograss")
+    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=inprograss",{
+      headers: {
+        Authorization: "JWT " + window.localStorage.getItem("token")
+      }
+    })
       .then(res => {
         const { data } = res;
 
@@ -210,7 +308,11 @@ export default function Todo({ history, location, match }) {
         console.log(error);
       })
 
-    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=end")
+    Axios.get("http://127.0.0.1:8000/api/todo/todo?status=end",{
+      headers: {
+        Authorization: "JWT " + window.localStorage.getItem("token")
+      }
+    })
       .then(res => {
         const { data } = res;
 
@@ -290,7 +392,7 @@ export default function Todo({ history, location, match }) {
 
       </Modal>
 
-      <div><Button id="button" type="primary" ghost onClick={showModal}>+ 추가</Button></div>
+      <div><FileAddFilled id="button" onClick={showModal} /></div>
       <div id="ListBox">
         <div className="detail">
           <div><h3>할 일</h3></div>
@@ -298,7 +400,10 @@ export default function Todo({ history, location, match }) {
             return (
               <div className="List">
                 <div>{v.name}</div>
-                <div>{v.end_date} <Button id="button2" type="primary" danger ghost onClick={() => { showModalDelete(v.seq, v.status) }}>삭제</Button></div>
+                <div>{v.end_date}
+                  <DeleteFilled id="button2" onClick={() => { showModalDelete(v.seq, v.status) }} />
+                  <EditFilled id="button3" onClick={() => { showModalEdit(v.seq) }} />
+                </div>
               </div>
             )
           })}
@@ -310,7 +415,10 @@ export default function Todo({ history, location, match }) {
               <div className="List">
 
                 <div>{v.name} </div>
-                <div>{v.end_date} <Button id="button2" type="primary" danger ghost onClick={() => { showModalDelete(v.seq, v.status) }} class="button" >삭제</Button></div>
+                <div>{v.end_date}
+                  <DeleteFilled id="button2" onClick={() => { showModalDelete(v.seq, v.status) }} />
+                  <EditFilled id="button3" onClick={() => { showModalEdit(v.seq) }} />
+                </div>
               </div>
             )
           })}
@@ -321,13 +429,17 @@ export default function Todo({ history, location, match }) {
             return (
               <div className="List">
                 <div>{v.name}</div>
-                <div>{v.end_date} <Button id="button2" type="primary" danger ghost onClick={() => { showModalDelete(v.seq, v.status) }} class="button">삭제</Button></div>
+                <div>{v.end_date}
+                  <DeleteFilled id="button2" onClick={() => { showModalDelete(v.seq, v.status) }} />
+                  <EditFilled id="button3" onClick={() => { showModalEdit(v.seq) }} />
+                </div>
               </div>
             )
           })}
         </div>
       </div>
-      <State state={state} setState={setState} setTodoList={setTodo}/>
+      <State state={state} setState={setState} setTodoList={setTodo} />
+      <EditState state={state} setTodoList={setTodo} setEditState={setEditState} editstate={editstate} />
     </>
   )
 }

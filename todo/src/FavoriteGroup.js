@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
 import Axios from 'axios';
+import { DeleteFilled, FileAddFilled, EditFilled } from '@ant-design/icons';
 
 function State({ state, setState, setFavoriteGroupList }) {
 
@@ -78,11 +79,106 @@ function State({ state, setState, setFavoriteGroupList }) {
 }
 
 
+function EditState({ state, setState, setFavoriteGroupList, setEditState, editstate }) {
+
+    const [favoritegroup, setFavoriteGroup] = React.useState({
+        name: '',
+        end_date: '',
+    });
+
+    const input = e => {
+        setFavoriteGroup([])
+    }
+
+    const [group, setGroup] = React.useState([])
+
+    React.useEffect(() => {
+
+        Axios.get("http://127.0.0.1:8000/api/todo/favoritegroup/")
+            .then(res => {
+
+                const { data } = res;
+
+                setGroup(prev => data)
+
+            }).catch(error => {
+                console.log(error);
+            })
+
+
+    }, []);
+
+    const handleOk2 = e => {
+
+
+        Axios.put("http://127.0.0.1:8000/api/todo/favoritegroup/" + editstate.seq + "/", favoritegroup)
+            .then(res => {
+
+                Axios.get("http://127.0.0.1:8000/api/todo/favoritegroup?status=" + favoritegroup.status)
+                    .then(res => {
+                        const { data } = res;
+
+                        setFavoriteGroupList(prev => ({
+                            ...prev,
+                            [favoritegroup.status]: data
+                        }))
+                    }).catch(error => {
+                        console.log(error);
+                    })
+
+            }).catch(error => {
+                console.log(error);
+            });
+
+        setEditState({
+            visible: false,
+        });
+    };
+
+    const handleCancel = e => {
+        console.log(e);
+        setEditState({
+            visible: false,
+        });
+    };
+
+    const change = e => {
+        const { value, name } = e.target;
+
+        setFavoriteGroup({
+            ...favoritegroup,
+            [name]: e.target.value
+        })
+    }
+
+    return (
+        <>
+
+            <Modal
+                title="Edit"
+                visible={editstate.visible}
+                onOk={handleOk2}
+                onCancel={handleCancel}
+            >
+                {favoritegroup.name}, {favoritegroup.end_date}   {editstate.seq}
+                <div>이름
+            <input type="text" value={favoritegroup.name} name="name" onChange={change} /></div>
+                <div>종료일
+            <input type="date" value={favoritegroup.end_date} name="end_date" onChange={change} /></div>
+            </Modal>
+        </>
+    );
+}
+
 export default function FavoriteGroup({ history, location, match }) {
 
     const [favoritegroup, setFavoriteGroup] = React.useState([]);
 
     const [state, setState] = React.useState({
+        visible: false
+    });
+
+    const [editstate, setEditState] = React.useState({
         visible: false
     });
     
@@ -93,8 +189,21 @@ export default function FavoriteGroup({ history, location, match }) {
     };
 
 
+    const showModalEdit = (seq) => {
+
+
+        setEditState({
+            visible: true,
+            seq: seq
+        });
+    };
+
     React.useEffect(() => {
-        Axios.get("http://127.0.0.1:8000/api/todo/favoritegroup/")
+        Axios.get("http://127.0.0.1:8000/api/todo/favoritegroup/",{
+            headers: {
+              Authorization: "JWT " + window.localStorage.getItem("token")
+            }
+          })
             .then(res => {
                 console.dir(res)
                 //const data = res.data;
@@ -188,20 +297,23 @@ export default function FavoriteGroup({ history, location, match }) {
 
             </Modal>
 
-            <div><Button id="button" type="primary" ghost onClick={showModal}>+ 추가</Button></div>
+            <div><FileAddFilled id="button" onClick={showModal} /></div>
             <div className="detail2">
                 {
                     favoritegroup.map((v, i) => {
                         return (
                             <div className="List">
                                 <div><h3>{v.name}</h3>{v.reg_date}
-                                    <Button id="button2" type="primary" danger ghost onClick={() => { showModalDelete(v.seq, v.status) }} class="button" >삭제</Button></div>
+                                    <DeleteFilled id="button2" onClick={() => { showModalDelete(v.seq, v.status) }} />
+                                    <EditFilled id="button3" onClick={() => { showModalEdit(v.seq) }} /></div>
                             </div>
                         )
                     })
                 }
             </div>
             <State state={state} setState={setState} setFavoriteGroupList={setFavoriteGroup}/>
+            <EditState editstate={editstate} setEditState={setEditState} setFavoriteGroupList={setFavoriteGroup} />
+
         </>
     )
 }

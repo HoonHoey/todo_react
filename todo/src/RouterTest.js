@@ -1,22 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Axios from 'axios';
 import queryString from 'query-string';
 import {BrowserRouter, Route, Link, NavLink, Switch} from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Form, Input, Button, Checkbox, message } from 'antd';
 import { MailOutlined, AppstoreOutlined, HomeOutlined  } from '@ant-design/icons';
-import 'RouterTest.css'
-import IMG from 'img/logo.PNG'
-import { Modal, Button } from 'antd';
-import Todo from 'Todo'
-import TodoGroup from 'TodoGroup'
-import Favorite from 'Favorite'
-import FavoriteGroup from 'FavoriteGroup'
-
-
+import 'RouterTest.css';
+import IMG from 'img/logo.PNG';
+import Todo from 'Todo';
+import TodoGroup from 'TodoGroup';
+import Favorite from 'Favorite';
+import FavoriteGroup from 'FavoriteGroup';
+import Log from 'Log';
+import LoginContext from 'Utils'
 
 
 export default function RouterTest(){
+
+    const [islogin, setIsLogin] = React.useState(false)
+
     
+
+    const login = React.useContext(LoginContext);
+
+    React.useEffect(() => {
+
+        const token = window.localStorage.getItem("token");
+        console.log(token);
+        if (token === null){
+            setIsLogin(false)
+        }
+        else {
+            setIsLogin(true)
+        }
+
+        // Axios.post("http://localhost:8000/api/account/api-jwt-auth", values)
+        //     .then(res => {
+        //         window.localStorage.getItem("token", res.data.token);
+        //         login.setIsLogin(true)
+        //     }).catch(error => {
+        //         message.info('Please Check again');
+        //     })
+    }, [])
+
     const { SubMenu } = Menu;
 
     const active = {
@@ -32,6 +57,9 @@ export default function RouterTest(){
 
     return (
         <>
+            
+            <LoginContext.Provider value={{islogin, setIsLogin}}>
+            {islogin? <button>로그아웃</button>:<><Button id="button" type="primary"><Link exact to="/login">LogIn</Link></Button></>}
             <div id="menu">
                 
             <img src={IMG} id="logo"/>
@@ -78,9 +106,11 @@ export default function RouterTest(){
                 <Route path="/todogroup" component={TodoGroup}/>
                 <Route path="/favorite" component={Favorite}/>
                 <Route path="/favoritegroup" component={FavoriteGroup}/>
+                <Route path="/login" component={Log}/>
                 <Route component={Nopage}/>
             </Switch>
             </div>
+            </LoginContext.Provider>
         </>
     );
 } 
